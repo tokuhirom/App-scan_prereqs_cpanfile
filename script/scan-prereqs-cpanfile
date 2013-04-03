@@ -201,7 +201,7 @@ sub find_perl_files {
                     if (/\.(pl|pm|psgi|t)$/) {
                         push @test_files, $_
                     }
-                } elsif ($topdir eq 'xt') {
+                } elsif ($topdir eq 'xt' || $topdir eq 'author') {
                     if (/\.(pl|pm|psgi|t)$/) {
                         push @develop_files, $_
                     }
