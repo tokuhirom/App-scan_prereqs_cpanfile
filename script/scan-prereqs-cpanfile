@@ -20,12 +20,14 @@ our $VERSION = '0.01';
 
 my $version;
 my $diff;
+my $include_empty;
 my $p = Getopt::Long::Parser->new(
     config => [qw(posix_default no_ignore_case auto_help)]
 );
 $p->getoptions(
     'version!'       => \$version,
     'diff=s' => \$diff,
+    'include-empty!' => \$include_empty,
 );
 if ($version) {
     printf "%s %s\n", File::Basename::basename($0), $VERSION;
@@ -75,7 +77,7 @@ sub main {
                 requires => $develop_prereqs,
             },
         }
-    )->to_string();
+    )->to_string($include_empty);
 }
 
 sub scan {
@@ -249,6 +251,17 @@ You can also list missing prerequisite modules.
 
 Compare the scanning result with META.json, META.yml or cpanfile.
 With this option, scan-prereqs-cpanfile displays missing prerequisite modules only.
+
+=item --include-empty
+
+By default, phases without any prereqs are not dumped, By giving this option, cpanfile will have an empty block such as:
+
+    on test => sub {
+    
+    };
+
+Defaults to false.
+
 
 =back
 
