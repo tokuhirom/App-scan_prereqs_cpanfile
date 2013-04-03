@@ -1,4 +1,4 @@
-package App::scanprereqscpanfile;
+package App::scan_prereqs_cpanfile;
 use strict;
 use warnings;
 use 5.008005;
@@ -11,15 +11,15 @@ __END__
 
 =head1 NAME
 
-App::scanprereqscpanfile - It's new $module
+App::scan_prereqs_cpanfile - It's new $module
 
 =head1 SYNOPSIS
 
-    use App::scanprereqscpanfile;
+    use App::scan_prereqs_cpanfile;
 
 =head1 DESCRIPTION
 
-App::scanprereqscpanfile is ...
+App::scan_prereqs_cpanfile is ...
 
 =head1 LICENSE
 

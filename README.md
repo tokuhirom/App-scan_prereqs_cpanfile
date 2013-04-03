@@ -1,14 +1,14 @@
 # NAME
 
-App::scanprereqscpanfile - It's new $module
+App::scan_prereqs_cpanfile - It's new $module
 
 # SYNOPSIS
 
-    use App::scanprereqscpanfile;
+    use App::scan_prereqs_cpanfile;
 
 # DESCRIPTION
 
-App::scanprereqscpanfile is ...
+App::scan_prereqs_cpanfile is ...
 
 # LICENSE
 

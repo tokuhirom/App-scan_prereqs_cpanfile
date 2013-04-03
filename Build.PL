@@ -21,8 +21,8 @@ my $builder = Module::Build->new(
     },
 
     no_index    => { 'directory' => [ 'inc' ] },
-    name        => 'App-scanprereqscpanfile',
-    module_name => 'App::scanprereqscpanfile',
+    name        => 'App-scan_prereqs_cpanfile',
+    module_name => 'App::scan_prereqs_cpanfile',
 
     script_files => [glob('script/*'), glob('bin/*')],
 
