@@ -43,9 +43,9 @@ sub debugf {
 &main; exit;
 
 sub main {
-    my ($runtime_files, $test_files, $configure_files) = find_perl_files();
+    my ($runtime_files, $test_files, $configure_files, $develop_files) = find_perl_files();
 
-    my @inner_packages = scan_inner_packages(@$test_files, @$runtime_files, @$configure_files);
+    my @inner_packages = scan_inner_packages(@$test_files, @$runtime_files, @$configure_files, @$develop_files);
     my $meta_prereqs = $diff ? load_diff_src($diff) : +{};
 
     # runtime
@@ -57,6 +57,9 @@ sub main {
     # configure
     my $configure_prereqs = scan($configure_files, \@inner_packages, $meta_prereqs, [qw(configure runtime)], 'configure', $runtime_prereqs);
 
+    # develop
+    my $develop_prereqs = scan($develop_files, \@inner_packages, $meta_prereqs, [qw(develop runtime)], 'develop', +{ %{$runtime_prereqs||{}}, %{$test_prereqs||{}}});
+
     print Module::CPANfile->from_prereqs(
         {
             runtime => {
@@ -67,6 +70,9 @@ sub main {
             },
             test => {
                 requires => $test_prereqs,
+            },
+            develop => {
+                requires => $develop_prereqs,
             },
         }
     )->to_string();
@@ -172,7 +178,7 @@ sub read_first_line {
 }
 
 sub find_perl_files {
-    my (@runtime_files, @test_files, @configure_files);
+    my (@runtime_files, @test_files, @configure_files, @develop_files);
     find(
         {
             no_chdir => 1,
@@ -189,9 +195,13 @@ sub find_perl_files {
 
                 if ($basename eq 'Build.PL' || $basename eq 'Makefile.PL') {
                     push @configure_files, $_
-                } elsif ($topdir eq 'xt' || $topdir eq 't') {
+                } elsif ($topdir eq 't') {
                     if (/\.(pl|pm|psgi|t)$/) {
                         push @test_files, $_
+                    }
+                } elsif ($topdir eq 'xt') {
+                    if (/\.(pl|pm|psgi|t)$/) {
+                        push @develop_files, $_
                     }
                 } else {
                     if (/\.(pl|pm|psgi)$/) {
@@ -207,6 +217,6 @@ sub find_perl_files {
         },
         '.'
     );
-    return (\@runtime_files, \@test_files, \@configure_files);
+    return (\@runtime_files, \@test_files, \@configure_files, \@develop_files);
 }
 
