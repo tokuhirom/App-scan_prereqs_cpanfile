@@ -16,10 +16,21 @@ use File::Spec;
 use File::Basename ();
 use Module::Metadata;
 
+our $VERSION = '0.01';
+
+my $version;
 my $diff;
-GetOptions(
+my $p = Getopt::Long::Parser->new(
+    config => [qw(posix_default no_ignore_case auto_help)]
+);
+$p->getoptions(
+    'version!'       => \$version,
     'diff=s' => \$diff,
 );
+if ($version) {
+    printf "%s %s\n", File::Basename::basename($0), $VERSION;
+    exit 0;
+}
 
 sub debugf {
     if ($ENV{DEBUG}) {
