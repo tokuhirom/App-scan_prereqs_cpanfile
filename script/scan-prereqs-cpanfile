@@ -206,7 +206,7 @@ sub find_perl_files {
                     if (/\.(pl|pm|psgi|t)$/) {
                         push @test_files, $_
                     }
-                } elsif ($topdir eq 'xt' || $topdir eq 'author') {
+                } elsif ($topdir eq 'xt' || $topdir eq 'author' || $topdir eq 'benchmark') {
                     if (/\.(pl|pm|psgi|t)$/) {
                         push @develop_files, $_
                     }
@@ -253,7 +253,7 @@ You can also list missing prerequisite modules.
 
 =item Used modules in `t/` as 'test' requires
 
-=item Used modules in `xt/` and `author/` as 'develop' requires
+=item Used modules in `xt/`, `benchmark/` and `author/` as 'develop' requires
 
 =item Used modules in other directories as 'runtime' requires
 
