@@ -1,0 +1,201 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use utf8;
+use 5.008001;
+
+use version;
+use CPAN::Meta;
+use Perl::PrereqScanner;
+use Getopt::Long;
+use CPAN::Meta::Requirements ();
+use File::Find qw(find);
+use Module::CoreList;
+use Module::CPANfile;
+use File::Spec;
+use File::Basename ();
+use Module::Metadata;
+
+my $diff;
+GetOptions(
+    'diff=s' => \$diff,
+);
+
+sub debugf {
+    if ($ENV{DEBUG}) {
+        my $format = shift;
+        my $txt = sprintf($format, @_);
+        print "$txt\n"
+    }
+}
+
+&main; exit;
+
+sub main {
+    my ($runtime_files, $test_files, $configure_files) = find_perl_files();
+
+    my @inner_packages = scan_inner_packages(@$test_files, @$runtime_files, @$configure_files);
+    my $meta_prereqs = $diff ? load_diff_src($diff) : +{};
+
+    # runtime
+    my $runtime_prereqs = scan($runtime_files, \@inner_packages, $meta_prereqs, [qw(runtime)], 'runtime', +{});
+
+    # test
+    my $test_prereqs = scan($test_files, \@inner_packages, $meta_prereqs, [qw(test runtime)], 'test', $runtime_prereqs);
+
+    # configure
+    my $configure_prereqs = scan($configure_files, \@inner_packages, $meta_prereqs, [qw(configure runtime)], 'configure', $runtime_prereqs);
+
+    print Module::CPANfile->from_prereqs(
+        {
+            runtime => {
+                requires => $runtime_prereqs,
+            },
+            configure => {
+                requires => $configure_prereqs,
+            },
+            test => {
+                requires => $test_prereqs,
+            },
+        }
+    )->to_string();
+}
+
+sub scan {
+    my ($files, $inner_packages, $meta_prereqs, $prereq_types, $type, $optional_prereqs) = @_;
+
+    my $prereqs = scan_files(@$files);
+
+    # Remove internal packages.
+    remove_prereqs($prereqs, +{ map { $_ => 1 } @$inner_packages });
+
+    # Remove from meta
+    for my $type (@$prereq_types) {
+        remove_prereqs($prereqs, $meta_prereqs->{$type}->{requires});
+    }
+
+    # Runtime prereqs.
+    if ($optional_prereqs) {
+        remove_prereqs($prereqs, $optional_prereqs);
+    }
+
+    # Remove core modules.
+    my $perl_version = $meta_prereqs->{perl} || '5.008001';
+    remove_prereqs($prereqs, blead_corelist($perl_version));
+
+    return $prereqs;
+}
+
+sub scan_inner_packages {
+    my @files = @_;
+    my %uniq;
+    my @list;
+    for my $file (@files) {
+        push @list, grep { !$uniq{$_}++ } Module::Metadata->new_from_file($file)->packages_inside();
+    }
+    return @list;
+}
+
+sub scan_files {
+    my @files = @_;
+
+    my $combined = CPAN::Meta::Requirements->new;
+    for my $file (@files) {
+        debugf("Reading %s", $file);
+        my $prereqs = Perl::PrereqScanner->new->scan_file($file);
+        $combined->add_requirements($prereqs);
+    }
+    my $prereqs = $combined->as_string_hash;
+}
+
+sub blead_corelist {
+    my $perl_version = shift;
+    my %corelist = %{$Module::CoreList::version{$perl_version}};
+    for my $module (keys %corelist) {
+        my $upstream = $Module::CoreList::upstream{$module};
+        if ($upstream && $upstream eq 'cpan') {
+            delete $corelist{$module};
+        }
+    }
+    return \%corelist;
+}
+
+sub remove_prereqs {
+    my ($prereqs, $allowed) = @_;
+
+    for my $module (keys %$allowed) {
+        if (exists $allowed->{$module}) {
+            if (parse_version($allowed->{$module}) >= parse_version($prereqs->{$module})) {
+                debugf("Core: %s %s >= %s", $module, $allowed->{$module}, $prereqs->{$module});
+                delete $prereqs->{$module}
+            }
+        }
+    }
+}
+
+sub parse_version {
+    my $v = shift;
+    return version->parse(0) unless defined $v;
+    return version->parse(''.$v);
+}
+
+sub load_diff_src {
+    my $src = shift;
+    if (File::Basename::basename($src) eq 'cpanfile') {
+        return Module::CPANfile->load($src)->prereq_specs;
+    } elsif ($src =~ /\.(yml|json)$/) {
+        my $meta = CPAN::Meta->load_file($src);
+        my $meta_prereqs = CPAN::Meta::Prereqs->new($meta->prereqs)->as_string_hash;
+        return $meta_prereqs;
+    } else {
+        die "No META.json and cpanfile\n";
+    }
+}
+
+sub read_first_line {
+    my $fname = shift;
+    open my $fh, '<', $fname
+        or Carp::croak("Can't open '$fname' for reading: '$!'");
+    my $line = <$fh>;
+    return $line;
+}
+
+sub find_perl_files {
+    my (@runtime_files, @test_files, @configure_files);
+    find(
+        {
+            no_chdir => 1,
+            wanted   => sub {
+                return if $_ eq '.';
+
+                # Ignore files.
+                my (undef, $topdir, ) = File::Spec->splitdir($_);
+                my $basename = File::Basename::basename($_);
+                return if $topdir eq '_build';
+                return if $topdir eq '.git';
+                return if $topdir eq 'blib';
+                return if $basename eq 'Build';
+
+                if ($basename eq 'Build.PL' || $basename eq 'Makefile.PL') {
+                    push @configure_files, $_
+                } elsif ($topdir eq 'xt' || $topdir eq 't') {
+                    if (/\.(pl|pm|psgi|t)$/) {
+                        push @test_files, $_
+                    }
+                } else {
+                    if (/\.(pl|pm|psgi)$/) {
+                        push @runtime_files, $_
+                    } else {
+                        my $line = read_first_line($_);
+                        if ($line && $line =~ /^#!.*perl/) {
+                            push @runtime_files, $_
+                        }
+                    }
+                }
+            }
+        },
+        '.'
+    );
+    return (\@runtime_files, \@test_files, \@configure_files);
+}
+
