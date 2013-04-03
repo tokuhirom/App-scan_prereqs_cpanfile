@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Scan prerequisite modules and generate CPANfile",
    "author" : [
       "tokuhirom <tokuhirom@gmail.com>"
    ],
@@ -71,5 +71,5 @@
          "web" : "https://github.com/tokuhirom/App-scan_prereqs_cpanfile"
       }
    },
-   "version" : "0.01"
+   "version" : "0.02"
 }

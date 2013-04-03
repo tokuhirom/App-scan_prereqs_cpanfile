@@ -16,11 +16,12 @@ use File::Spec;
 use File::Basename ();
 use Module::Metadata;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my $version;
 my $diff;
 my $include_empty;
+my @ignore = qw(eg examples share);
 my $p = Getopt::Long::Parser->new(
     config => [qw(posix_default no_ignore_case auto_help)]
 );
@@ -195,6 +196,10 @@ sub find_perl_files {
                 return if $topdir eq 'blib';
                 return if $basename eq 'Build';
 
+                for (@ignore) {
+                    next if $topdir eq $_;
+                }
+
                 if ($basename eq 'Build.PL' || $basename eq 'Makefile.PL') {
                     push @configure_files, $_
                 } elsif ($topdir eq 't') {
@@ -240,6 +245,20 @@ scan-prereqs-cpanfile - Scan prerequisite modules and generate CPANfile
 This script scans prerequisite modules from your code, and generate CPANfile.
 You can also list missing prerequisite modules.
 
+=head1 SCANNING RULES
+
+=over 4
+
+=item Used modules in `Build.PL` or `Makefile.PL` as 'test' requires
+
+=item Used modules in `t/` as 'test' requires
+
+=item Used modules in `xt/` and `author/` as 'develop' requires
+
+=item Used modules in other directories as 'runtime' requires
+
+=back
+
 =head1 OPTIONS
 
 =over 4
@@ -261,7 +280,6 @@ By default, phases without any prereqs are not dumped, By giving this option, cp
     };
 
 Defaults to false.
-
 
 =back
 

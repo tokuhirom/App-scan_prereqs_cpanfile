@@ -1,14 +1,10 @@
 # NAME
 
-App::scan\_prereqs\_cpanfile - It's new $module
-
-# SYNOPSIS
-
-    use App::scan_prereqs_cpanfile;
+App::scan\_prereqs\_cpanfile - Scan prerequisite modules and generate CPANfile
 
 # DESCRIPTION
 
-App::scan\_prereqs\_cpanfile is ...
+Please look [scan-prereqs-cpanfile](http://search.cpan.org/perldoc?scan-prereqs-cpanfile).
 
 # LICENSE
 
