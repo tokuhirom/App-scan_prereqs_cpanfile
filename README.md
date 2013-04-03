@@ -1,6 +1,6 @@
 # NAME
 
-App::scan_prereqs_cpanfile - It's new $module
+App::scan\_prereqs\_cpanfile - It's new $module
 
 # SYNOPSIS
 
@@ -8,7 +8,7 @@ App::scan_prereqs_cpanfile - It's new $module
 
 # DESCRIPTION
 
-App::scan_prereqs_cpanfile is ...
+App::scan\_prereqs\_cpanfile is ...
 
 # LICENSE
 

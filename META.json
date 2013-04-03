@@ -13,6 +13,16 @@
       "version" : "2"
    },
    "name" : "App-scan_prereqs_cpanfile",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples"
+      ]
+   },
    "prereqs" : {
       "configure" : {
          "requires" : {
@@ -50,5 +60,16 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/tokuhirom/App-scan_prereqs_cpanfile/issues"
+      },
+      "homepage" : "https://github.com/tokuhirom/App-scan_prereqs_cpanfile",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/tokuhirom/App-scan_prereqs_cpanfile.git",
+         "web" : "https://github.com/tokuhirom/App-scan_prereqs_cpanfile"
+      }
+   },
    "version" : "0.01"
 }
