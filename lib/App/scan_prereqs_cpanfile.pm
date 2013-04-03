@@ -11,15 +11,11 @@ __END__
 
 =head1 NAME
 
-App::scan_prereqs_cpanfile - It's new $module
-
-=head1 SYNOPSIS
-
-    use App::scan_prereqs_cpanfile;
+App::scan_prereqs_cpanfile - Scan prerequisite modules and generate CPANfile
 
 =head1 DESCRIPTION
 
-App::scan_prereqs_cpanfile is ...
+Please look L<scan-prereqs-cpanfile>.
 
 =head1 LICENSE
 

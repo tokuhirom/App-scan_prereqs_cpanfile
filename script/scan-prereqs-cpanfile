@@ -220,3 +220,43 @@ sub find_perl_files {
     return (\@runtime_files, \@test_files, \@configure_files, \@develop_files);
 }
 
+__END__
+
+=head1 NAME
+
+scan-prereqs-cpanfile - Scan prerequisite modules and generate CPANfile
+
+=head1 SYNOPSIS
+
+    % scan-prereqs-cpanfile
+
+        --diff=META.json      # Generate diff from META.json
+        --diff=cpanfile       # Generate diff from cpanfile
+
+=head1 DESCRIPTION
+
+This script scans prerequisite modules from your code, and generate CPANfile.
+You can also list missing prerequisite modules.
+
+=head1 OPTIONS
+
+=over 4
+
+=item --diff
+
+        --diff=META.json      # Generate diff from META.json
+        --diff=cpanfile       # Generate diff from cpanfile
+
+Compare the scanning result with META.json, META.yml or cpanfile.
+With this option, scan-prereqs-cpanfile displays missing prerequisite modules only.
+
+=back
+
+=head1 AUTHOR
+
+Tokuhiro Matsuno
+
+=head1 SEE ALSO
+
+L<Module::CPANfile>, L<Perl::PrereqScanner>
+
