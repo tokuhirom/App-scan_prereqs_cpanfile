@@ -97,6 +97,7 @@ sub scan {
     # Remove from meta
     for my $type (@$prereq_types) {
         remove_prereqs($prereqs, $meta_prereqs->{$type}->{requires});
+        remove_prereqs($prereqs, $meta_prereqs->{$type}->{recommends});
     }
 
     # Runtime prereqs.
@@ -147,6 +148,7 @@ sub blead_corelist {
 
 sub remove_prereqs {
     my ($prereqs, $allowed) = @_;
+    return unless $allowed;
 
     for my $module (keys %$allowed) {
         if (exists $allowed->{$module}) {
