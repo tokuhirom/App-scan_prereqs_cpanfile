@@ -2,6 +2,11 @@ Revision history for Perl extension App-scan_prereqs_cpanfile
 
 {{$NEXT}}
 
+0.04 2013-04-04T05:48:20Z
+
+    - Ignore fatlib/ and ignore fatpacked files.
+      (tokuhirom)
+
 0.03 2013-04-04T03:07:39Z
 
     - Fixed deps: Module::CPANfile 0.9020
