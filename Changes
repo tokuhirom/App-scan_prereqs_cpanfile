@@ -2,6 +2,15 @@ Revision history for Perl extension App-scan_prereqs_cpanfile
 
 {{$NEXT}}
 
+0.03 2013-04-04T03:07:39Z
+
+    - Fixed deps: Module::CPANfile 0.9020
+      (Syohei YOSHIDA)
+    - Do not include prereqs determined by 'recommends'
+      (tokuhirom)
+    - Ignore build dir like Dist-Name-0.01/.
+      (tokuhirom)
+
 0.02 2013-04-03T21:03:10Z
 
     - Documentation enhancements

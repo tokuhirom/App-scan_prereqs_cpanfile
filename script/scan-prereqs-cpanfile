@@ -16,7 +16,7 @@ use File::Spec;
 use File::Basename ();
 use Module::Metadata;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub debugf {
     if ($ENV{SCAN_PREREQS_CPANFILE_DEBUG}) {
