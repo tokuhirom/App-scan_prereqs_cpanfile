@@ -18,6 +18,18 @@ use Module::Metadata;
 
 our $VERSION = '0.02';
 
+sub debugf {
+    if ($ENV{SCAN_PREREQS_CPANFILE_DEBUG}) {
+	require Data::Dumper;
+	my $format = shift;
+	no warnings 'once';
+	local $Data::Dumper::Terse  = 1;
+	local $Data::Dumper::Indent = 0;
+	my $txt = sprintf($format, map { defined($_) ? Data::Dumper::Dumper($_) : '-' } @_);
+	print $txt, "\n";
+    }
+}
+
 my $version;
 my $diff;
 my $include_empty;
@@ -35,18 +47,11 @@ if ($version) {
     exit 0;
 }
 
-sub debugf {
-    if ($ENV{DEBUG}) {
-        my $format = shift;
-        my $txt = sprintf($format, @_);
-        print "$txt\n"
-    }
-}
-
 &main; exit;
 
 sub main {
     my ($runtime_files, $test_files, $configure_files, $develop_files) = find_perl_files();
+    debugf($develop_files);
 
     my @inner_packages = scan_inner_packages(@$test_files, @$runtime_files, @$configure_files, @$develop_files);
     my $meta_prereqs = $diff ? load_diff_src($diff) : +{};
