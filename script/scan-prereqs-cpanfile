@@ -203,6 +203,9 @@ sub find_perl_files {
                 return if $topdir eq 'blib';
                 return if $basename eq 'Build';
 
+		# Ignore build dir like Dist-Name-0.01/.
+		return if -f "$topdir/META.json";
+
                 for (@ignore) {
                     next if $topdir eq $_;
                 }
