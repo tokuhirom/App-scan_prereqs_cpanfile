@@ -7,3 +7,8 @@
 /nytprof/
 /Build
 /App-scanprereqscpanfile-*
+/App-scan_prereqs_cpanfile-*
+/.build
+/_build_params
+!Build/
+!META.json
