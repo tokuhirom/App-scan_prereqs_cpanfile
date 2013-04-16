@@ -33,15 +33,18 @@ sub debugf {
 my $version;
 my $diff;
 my $include_empty;
-my @ignore = qw(eg examples share fatlib);
+my @ignore = qw(eg examples share fatlib _build .git blib);
+my $add_ignore;
 my $p = Getopt::Long::Parser->new(
     config => [qw(posix_default no_ignore_case auto_help)]
 );
 $p->getoptions(
     'version!'       => \$version,
     'diff=s' => \$diff,
+    'ignore=s' => \$add_ignore,
     'include-empty!' => \$include_empty,
 );
+push @ignore, split /,/,$add_ignore if $add_ignore;
 if ($version) {
     printf "%s %s\n", File::Basename::basename($0), $VERSION;
     exit 0;
@@ -199,9 +202,6 @@ sub find_perl_files {
                 # Ignore files.
                 my (undef, $topdir, ) = File::Spec->splitdir($_);
                 my $basename = File::Basename::basename($_);
-                return if $topdir eq '_build';
-                return if $topdir eq '.git';
-                return if $topdir eq 'blib';
                 return if $basename eq 'Build';
 
                 # Ignore build dir like Dist-Name-0.01/.
