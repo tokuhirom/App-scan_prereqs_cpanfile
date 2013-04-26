@@ -33,7 +33,7 @@ sub debugf {
 my $version;
 my $diff;
 my $include_empty;
-my @ignore = qw(eg examples share fatlib _build .git blib);
+my @ignore = qw(eg examples share fatlib _build .git blib local);
 my $add_ignore;
 my $p = Getopt::Long::Parser->new(
     config => [qw(posix_default no_ignore_case auto_help)]
