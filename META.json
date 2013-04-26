@@ -4,7 +4,7 @@
       "tokuhirom <tokuhirom@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.0.53, CPAN::Meta::Converter version 2.130880",
+   "generated_by" : "Minilla/v0.0.56, CPAN::Meta::Converter version 2.130880",
    "license" : [
       "perl_5"
    ],
@@ -34,11 +34,10 @@
       },
       "develop" : {
          "requires" : {
-            "Pod::Wordlist::hanekomu" : "0",
             "Test::CPAN::Meta" : "0",
             "Test::MinimumVersion" : "0.10108",
             "Test::Pod" : "1.41",
-            "Test::Spellunker" : "v0.0.3"
+            "Test::Spellunker" : "v0.0.16"
          }
       },
       "runtime" : {
@@ -72,7 +71,7 @@
          "web" : "https://github.com/tokuhirom/App-scan_prereqs_cpanfile"
       }
    },
-   "version" : "0.05",
+   "version" : "0.06",
    "x_contributors" : [
       "Syohei YOSHIDA <syohex@gmail.com>",
       "Kan Fushihara <kan.fushihara@gmail.com>"

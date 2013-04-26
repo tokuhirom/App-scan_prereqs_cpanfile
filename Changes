@@ -2,6 +2,13 @@ Revision history for Perl extension App-scan_prereqs_cpanfile
 
 {{$NEXT}}
 
+0.06 2013-04-26T10:50:13Z
+
+    - Document --ignore option.
+      (tokuhirom)
+    - Ignore `local` directory by default.
+      (tokuhirom)
+
 0.05 2013-04-16T12:30:30Z
 
     - add 'ignore' option (append ignore dirs)
