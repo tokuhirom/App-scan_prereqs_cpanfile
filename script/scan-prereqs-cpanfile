@@ -256,6 +256,7 @@ scan-prereqs-cpanfile - Scan prerequisite modules and generate CPANfile
 
         --diff=META.json      # Generate diff from META.json
         --diff=cpanfile       # Generate diff from cpanfile
+        --ignore=extlib/
 
 =head1 DESCRIPTION
 
@@ -287,6 +288,12 @@ You can also list missing prerequisite modules.
 
 Compare the scanning result with META.json, META.yml or cpanfile.
 With this option, scan-prereqs-cpanfile displays missing prerequisite modules only.
+
+=item --ignore
+
+    --ignore=tools/
+
+Ignore some directories.
 
 =item --include-empty
 
