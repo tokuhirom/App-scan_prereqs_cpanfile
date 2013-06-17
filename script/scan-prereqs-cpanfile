@@ -198,6 +198,7 @@ sub find_perl_files {
             no_chdir => 1,
             wanted   => sub {
                 return if $_ eq '.';
+                return if -S $_; # Ignore UNIX socket
 
                 # Ignore files.
                 my (undef, $topdir, ) = File::Spec->splitdir($_);
