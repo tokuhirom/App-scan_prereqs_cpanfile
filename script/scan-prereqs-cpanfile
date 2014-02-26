@@ -216,7 +216,12 @@ sub find_perl_files {
                     push @configure_files, $_
                 } elsif ($topdir eq 't') {
                     if (/\.(pl|pm|psgi|t)$/) {
-                        push @test_files, $_
+                        if ($basename =~ /^(?:author|release)-/) {
+                            # dzil creates author test files to t/author-XXX.t
+                            push @develop_files, $_
+                        } else {
+                            push @test_files, $_
+                        }
                     }
                 } elsif ($topdir eq 'xt' || $topdir eq 'author' || $topdir eq 'benchmark') {
                     if (/\.(pl|pm|psgi|t)$/) {
