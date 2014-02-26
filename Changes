@@ -2,6 +2,14 @@ Revision history for Perl extension App-scan_prereqs_cpanfile
 
 {{$NEXT}}
 
+0.09 2014-02-26T05:45:47Z
+
+    commit 8b855a107aedf0248fc7b6e42f7a981e3ec0f340
+    Author: HIROSE Masaaki <hirose31@gmail.com>
+    Date:   Wed Feb 26 14:37:58 2014 +0900
+
+        Treat t/(author|release)-*.t as develop files
+
 0.08 2013-06-17T06:28:03Z
 
     - Do not use /usr/bin/env

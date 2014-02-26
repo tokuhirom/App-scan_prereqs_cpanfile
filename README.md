@@ -4,7 +4,7 @@ App::scan\_prereqs\_cpanfile - Scan prerequisite modules and generate CPANfile
 
 # DESCRIPTION
 
-Please look [scan-prereqs-cpanfile](http://search.cpan.org/perldoc?scan-prereqs-cpanfile).
+Please look [scan-prereqs-cpanfile](https://metacpan.org/pod/scan-prereqs-cpanfile).
 
 # LICENSE
 
