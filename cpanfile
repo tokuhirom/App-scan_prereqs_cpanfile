@@ -7,6 +7,8 @@ requires 'Module::Metadata';
 requires 'Perl::PrereqScanner';
 requires 'version';
 
+recommends 'Perl::PrereqScanner::Lite', '0.10';
+
 on test => sub {
     requires 'Test::More', 0.98;
 };
