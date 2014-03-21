@@ -6,7 +6,6 @@ use 5.008001;
 
 use version;
 use CPAN::Meta;
-use Perl::PrereqScanner;
 use Getopt::Long;
 use CPAN::Meta::Requirements ();
 use File::Find qw(find);
@@ -33,6 +32,7 @@ sub debugf {
 my $version;
 my $diff;
 my $include_empty;
+my $fast_mode;
 my @ignore = qw(eg examples share fatlib _build .git blib local);
 my $add_ignore;
 my $p = Getopt::Long::Parser->new(
@@ -40,9 +40,10 @@ my $p = Getopt::Long::Parser->new(
 );
 $p->getoptions(
     'version!'       => \$version,
-    'diff=s' => \$diff,
-    'ignore=s' => \$add_ignore,
+    'diff=s'         => \$diff,
+    'ignore=s'       => \$add_ignore,
     'include-empty!' => \$include_empty,
+    'fast'           => \$fast_mode,
 );
 push @ignore, split /,/,$add_ignore if $add_ignore;
 if ($version) {
@@ -131,7 +132,17 @@ sub scan_files {
     my $combined = CPAN::Meta::Requirements->new;
     for my $file (@files) {
         debugf("Reading %s", $file);
-        my $prereqs = Perl::PrereqScanner->new->scan_file($file);
+
+        my $scanner;
+        if ($fast_mode) {
+            require Perl::PrereqScanner::Lite;
+            $scanner = Perl::PrereqScanner::Lite->new;
+        }
+        else {
+            require Perl::PrereqScanner;
+            $scanner = Perl::PrereqScanner->new;
+        }
+        my $prereqs = $scanner->scan_file($file);
         $combined->add_requirements($prereqs);
     }
     my $prereqs = $combined->as_string_hash;
@@ -306,10 +317,14 @@ Ignore some directories.
 By default, phases without any prereqs are not dumped, By giving this option, cpanfile will have an empty block such as:
 
     on test => sub {
-    
+
     };
 
 Defaults to false.
+
+=item --fast
+
+Fast mode option. With this option, this application uses C<Perl::PrereqScanner::Lite> as backend.
 
 =back
 
