@@ -14,6 +14,7 @@ use Module::CPANfile;
 use File::Spec;
 use File::Basename ();
 use Module::Metadata;
+use Perl::PrereqScanner::Lite;
 
 our $VERSION = '0.10';
 
@@ -131,7 +132,6 @@ sub scan_files {
     for my $file (@files) {
         debugf("Reading %s", $file);
 
-        require Perl::PrereqScanner::Lite;
         my $scanner = Perl::PrereqScanner::Lite->new;
         $scanner->add_extra_scanner('Moose');
         my $prereqs = $scanner->scan_file($file);
