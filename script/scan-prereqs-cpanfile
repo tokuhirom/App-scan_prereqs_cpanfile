@@ -32,7 +32,6 @@ sub debugf {
 my $version;
 my $diff;
 my $include_empty;
-my $fast_mode;
 my @ignore = qw(eg examples share fatlib _build .git blib local);
 my $add_ignore;
 my $p = Getopt::Long::Parser->new(
@@ -43,7 +42,6 @@ $p->getoptions(
     'diff=s'         => \$diff,
     'ignore=s'       => \$add_ignore,
     'include-empty!' => \$include_empty,
-    'fast'           => \$fast_mode,
 );
 push @ignore, split /,/,$add_ignore if $add_ignore;
 if ($version) {
@@ -133,15 +131,9 @@ sub scan_files {
     for my $file (@files) {
         debugf("Reading %s", $file);
 
-        my $scanner;
-        if ($fast_mode) {
-            require Perl::PrereqScanner::Lite;
-            $scanner = Perl::PrereqScanner::Lite->new;
-        }
-        else {
-            require Perl::PrereqScanner;
-            $scanner = Perl::PrereqScanner->new;
-        }
+        require Perl::PrereqScanner::Lite;
+        my $scanner = Perl::PrereqScanner::Lite->new;
+        $scanner->add_extra_scanner('Moose');
         my $prereqs = $scanner->scan_file($file);
         $combined->add_requirements($prereqs);
     }
@@ -322,10 +314,6 @@ By default, phases without any prereqs are not dumped, By giving this option, cp
 
 Defaults to false.
 
-=item --fast
-
-Fast mode option. With this option, this application uses C<Perl::PrereqScanner::Lite> as backend.
-
 =back
 
 =head1 AUTHOR
@@ -334,5 +322,5 @@ Tokuhiro Matsuno
 
 =head1 SEE ALSO
 
-L<Module::CPANfile>, L<Perl::PrereqScanner>
+L<Module::CPANfile>, L<Perl::PrereqScanner::Lite>
 
