@@ -16,7 +16,7 @@ use File::Basename ();
 use Module::Metadata;
 use Perl::PrereqScanner::Lite;
 
-our $VERSION = '0.10';
+our $VERSION = '1.00';
 
 sub debugf {
     if ($ENV{SCAN_PREREQS_CPANFILE_DEBUG}) {

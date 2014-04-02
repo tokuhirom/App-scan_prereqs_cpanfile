@@ -2,6 +2,11 @@ Revision history for Perl extension App-scan_prereqs_cpanfile
 
 {{$NEXT}}
 
+1.00 2014-04-02T22:49:36Z
+
+    - Make Perl::PrereqScanner::Lite as the default scanner.
+      (moznion)
+
 0.10 2014-03-21T10:14:20Z
 
     - --fast option
