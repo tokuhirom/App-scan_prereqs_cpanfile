@@ -33,6 +33,7 @@ sub debugf {
 my $version;
 my $diff;
 my $include_empty;
+my $scan_test_requires;
 my @ignore = qw(eg examples share fatlib _build .git blib local .build);
 my $add_ignore;
 my $p = Getopt::Long::Parser->new(
@@ -43,6 +44,7 @@ $p->getoptions(
     'diff=s'         => \$diff,
     'ignore=s'       => \$add_ignore,
     'include-empty!' => \$include_empty,
+    'scan-test-requires' => \$scan_test_requires,
 );
 push @ignore, split /,/,$add_ignore if $add_ignore;
 if ($version) {
@@ -70,6 +72,10 @@ sub main {
 
     # develop
     my $develop_prereqs = scan($develop_files, \@inner_packages, $meta_prereqs, [qw(develop test runtime)], 'develop', +{ %{$runtime_prereqs||{}}, %{$test_prereqs||{}}});
+
+    if ($scan_test_requires) {
+        $develop_prereqs = scan_test_requires($develop_prereqs);
+    }
 
     print Module::CPANfile->from_prereqs(
         {
@@ -251,6 +257,46 @@ sub find_perl_files {
         '.'
     );
     return (\@runtime_files, \@test_files, \@configure_files, \@develop_files);
+}
+
+sub scan_test_requires {
+    my $develop_prereqs = shift;
+
+    require Test::Requires::Scanner;
+
+    my @test_files;
+    find(
+        {
+            no_chdir => 1,
+            wanted   => sub {
+                return if $_ eq '.';
+                return if -S $_; # Ignore UNIX socket
+
+                my (undef, $topdir, ) = File::Spec->splitdir($_);
+                if (($topdir eq 'xt' || $topdir eq 't') && /\.t$/ ) {
+                    push @test_files, $_
+                }
+            },
+        },
+        '.'
+    );
+    my $test_requires_prereqs = Test::Requires::Scanner->scan_files(@test_files);
+
+    for my $module (keys %$test_requires_prereqs) {
+        my $version = $test_requires_prereqs->{$module};
+
+        if (! exists $develop_prereqs->{$module}) {
+            $develop_prereqs->{$module} = $version || 0;
+        }
+        else {
+            my $current_version = $develop_prereqs->{$module};
+            if ( parse_version($version) > parse_version($current_version) ) {
+                $develop_prereqs->{$module} = $version || 0;
+            }
+        }
+    }
+
+    return $develop_prereqs;
 }
 
 __END__
