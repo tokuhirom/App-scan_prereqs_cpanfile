@@ -285,14 +285,10 @@ sub scan_test_requires {
     for my $module (keys %$test_requires_prereqs) {
         my $version = $test_requires_prereqs->{$module};
 
-        if (! exists $develop_prereqs->{$module}) {
+        if (! exists $develop_prereqs->{$module} ||
+            parse_version($version) > parse_version($develop_prereqs->{$module})
+        ) {
             $develop_prereqs->{$module} = $version || 0;
-        }
-        else {
-            my $current_version = $develop_prereqs->{$module};
-            if ( parse_version($version) > parse_version($current_version) ) {
-                $develop_prereqs->{$module} = $version || 0;
-            }
         }
     }
 
