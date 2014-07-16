@@ -4,7 +4,7 @@
       "tokuhirom <tokuhirom@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.15.1, CPAN::Meta::Converter version 2.140640",
+   "generated_by" : "Minilla/v2.1.0, CPAN::Meta::Converter version 2.141520",
    "license" : [
       "perl_5"
    ],
@@ -41,6 +41,9 @@
          }
       },
       "runtime" : {
+         "recommends" : {
+            "Test::Requires::Scanner" : "0"
+         },
          "requires" : {
             "CPAN::Meta" : "0",
             "CPAN::Meta::Requirements" : "0",
@@ -71,11 +74,12 @@
          "web" : "https://github.com/tokuhirom/App-scan_prereqs_cpanfile"
       }
    },
-   "version" : "1.01",
+   "version" : "1.02",
    "x_contributors" : [
       "Syohei YOSHIDA <syohex@gmail.com>",
       "Kan Fushihara <kan.fushihara@gmail.com>",
       "HIROSE Masaaki <hirose31@gmail.com>",
-      "moznion <moznion@gmail.com>"
+      "moznion <moznion@gmail.com>",
+      "Songmu <y.songmu@gmail.com>"
    ]
 }

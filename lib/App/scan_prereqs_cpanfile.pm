@@ -2,7 +2,7 @@ package App::scan_prereqs_cpanfile;
 use strict;
 use warnings;
 use 5.008005;
-our $VERSION = "1.01";
+our $VERSION = "1.02";
 
 
 
