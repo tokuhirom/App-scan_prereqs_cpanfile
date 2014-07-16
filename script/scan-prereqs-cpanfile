@@ -360,6 +360,10 @@ By default, phases without any prereqs are not dumped, By giving this option, cp
 
 Defaults to false.
 
+=item --scan-test-requires (EXPERIMENTAL)
+
+Scan test files and include the modules specified by L<Test::Requires> as 'develop' requires.
+
 =back
 
 =head1 AUTHOR
