@@ -2,6 +2,11 @@ Revision history for Perl extension App-scan_prereqs_cpanfile
 
 {{$NEXT}}
 
+1.03 2015-02-26T08:29:19Z
+
+    - Do not hang on fifo
+      (@powerman)
+
 1.02 2014-07-16T06:47:07Z
 
     - Added experimental --scan-test-requires option.
