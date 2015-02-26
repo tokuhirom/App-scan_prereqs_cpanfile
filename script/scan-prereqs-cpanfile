@@ -193,6 +193,7 @@ sub load_diff_src {
 
 sub read_from_file {
     my ($fname, $length) = @_;
+    return q{} if !-f $fname;
     open my $fh, '<', $fname
         or Carp::croak("Can't open '$fname' for reading: '$!'");
     my $buf;
