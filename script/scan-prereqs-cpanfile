@@ -35,6 +35,8 @@ my $diff;
 my $include_empty;
 my $scan_test_requires;
 my $dir = ".";
+my $ignorefile;
+my $ignore_regex;
 my @ignore = qw(eg examples share fatlib _build .git blib local .build);
 my $add_ignore;
 my $p = Getopt::Long::Parser->new(
@@ -44,11 +46,21 @@ $p->getoptions(
     'version!'       => \$version,
     'diff=s'         => \$diff,
     'ignore=s'       => \$add_ignore,
+    'ignore-file=s'    => \$ignorefile,
     'include-empty!' => \$include_empty,
     'scan-test-requires' => \$scan_test_requires,
     'dir=s'          => \$dir,
 );
 push @ignore, split /,/,$add_ignore if $add_ignore;
+
+if ($ignorefile) {
+    ! -r $ignorefile && die "Unable to read ignore-file '$ignorefile' !" ;
+    open my $fh, '<', $ignorefile;
+    chomp(my @lines = <$fh>);
+    $ignore_regex = join '|', @lines;
+    close $fh;
+}
+
 if ($version) {
     printf "%s %s\n", File::Basename::basename($0), $VERSION;
     exit 0;
@@ -216,6 +228,7 @@ sub find_perl_files {
                 my (undef, $topdir, ) = File::Spec->splitdir($_);
                 my $basename = File::Basename::basename($_);
                 return if $basename eq 'Build';
+                return if $_ =~ m/$ignore_regex/;
 
                 # Ignore build dir like Dist-Name-0.01/.
                 return if -f "$topdir/META.json";
@@ -349,6 +362,12 @@ With this option, scan-prereqs-cpanfile displays missing prerequisite modules on
     --ignore=tools,extlib
 
 Ignore some directories.
+
+=item --ignore-file
+
+    --ignore-file=ignored.regex
+
+Ignore all files and directories matching a regex pattern listed in this file.
 
 =item --include-empty
 
