@@ -21,6 +21,7 @@ my $ignorefile;
 my $ignore_regexp;
 my @ignore = qw(eg examples share fatlib _build .git blib local .build);
 my $add_ignore;
+my $match_versions;
 my $p = Getopt::Long::Parser->new(
     config => [qw(posix_default no_ignore_case auto_help)]
 );
@@ -28,10 +29,11 @@ $p->getoptions(
     'version!'       => \$version,
     'diff=s'         => \$diff,
     'ignore=s'       => \$add_ignore,
-    'ignore-file=s'    => \$ignorefile,
+    'ignore-file=s'  => \$ignorefile,
     'include-empty!' => \$include_empty,
     'scan-test-requires' => \$scan_test_requires,
     'dir=s'          => \$dir,
+    'match-versions' => \$match_versions,
 );
 push @ignore, split /,/,$add_ignore if $add_ignore;
 
@@ -72,6 +74,14 @@ if ($version) {
 
     if ($scan_test_requires) {
         $develop_prereqs = scan_test_requires($dir, $develop_prereqs);
+    }
+
+    # Get minimum versions from currently installed modules (= available in @INC)
+    if ($match_versions) {
+		require V;
+        for my $prereqs ($runtime_prereqs, $configure_prereqs, $test_prereqs, $develop_prereqs) {
+            $prereqs = { map { $_ => V::get_version($_) } keys %$prereqs };
+        }
     }
 
     print Module::CPANfile->from_prereqs(

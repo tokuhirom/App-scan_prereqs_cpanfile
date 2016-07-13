@@ -8,8 +8,8 @@ requires 'Perl::PrereqScanner::Lite', '0.21';
 requires 'version';
 
 recommends 'Test::Requires::Scanner';
+recommends 'V';
 
 on test => sub {
     requires 'Test::More', 0.98;
 };
-

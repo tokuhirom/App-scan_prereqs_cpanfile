@@ -2,6 +2,9 @@ Revision history for Perl extension App-scan_prereqs_cpanfile
 
 {{$NEXT}}
 
+    - Added --match-versions option
+      (maxhq)
+
 1.03 2015-02-26T08:29:19Z
 
     - Do not hang on fifo
