@@ -78,9 +78,16 @@ if ($version) {
 
     # Get minimum versions from currently installed modules (= available in @INC)
     if ($match_versions) {
-		require V;
+		require Module::Metadata;
         for my $prereqs ($runtime_prereqs, $configure_prereqs, $test_prereqs, $develop_prereqs) {
-            $prereqs = { map { $_ => V::get_version($_) } keys %$prereqs };
+            $prereqs = {
+                map {
+                    my $meta = Module::Metadata->new_from_module($_);
+                    $_ => m/^perl$/    # Module::Metadata does not work for "perl"
+                        ? $prereqs->{$_}
+                        : ( $meta ? $meta->version : undef )
+                }
+                keys %$prereqs };
         }
     }
 
