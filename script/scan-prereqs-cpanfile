@@ -87,7 +87,8 @@ if ($version) {
                         ? $prereqs->{$_}
                         : ( $meta ? $meta->version : undef )
                 }
-                keys %$prereqs };
+                keys %$prereqs
+            };
         }
     }
 
