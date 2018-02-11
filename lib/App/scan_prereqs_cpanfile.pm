@@ -6,7 +6,7 @@ our $VERSION = "1.03";
 
 use Exporter 5.57 'import';
 our @EXPORT_OK = qw(
-    debugf find_perl_files scan_inner_packages scan
+    debugf find_perl_files scan_inner_packages scan scan_test_requires
 );
 
 use version ();
@@ -20,9 +20,6 @@ use File::Basename ();
 use Module::Metadata ();
 use Perl::PrereqScanner::Lite;
 
-
-
-
 sub debugf {
     if ($ENV{SCAN_PREREQS_CPANFILE_DEBUG}) {
         require Data::Dumper;
@@ -34,8 +31,6 @@ sub debugf {
         print $txt, "\n";
     }
 }
-
-
 
 sub scan {
     my ($files, $inner_packages, $meta_prereqs, $prereq_types, $type, $optional_prereqs) = @_;
