@@ -216,7 +216,7 @@ sub scan_test_requires {
                 return if -S $_; # Ignore UNIX socket
 
                 my (undef, $topdir, ) = File::Spec->splitdir($_);
-                if (($topdir eq 'xt' || $topdir eq 't') && /\.t$/ ) {
+                if (($topdir eq 'xt' || $topdir eq 't') && /\.(?:t|pm)$/ ) {
                     push @test_files, $_
                 }
             },
