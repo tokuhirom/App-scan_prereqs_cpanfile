@@ -9,7 +9,7 @@ use File::Basename ();
 use Module::CPANfile ();
 
 use App::scan_prereqs_cpanfile qw(
-    debugf find_perl_files scan_inner_packages scan
+    debugf find_perl_files scan_inner_packages scan scan_test_requires
 );
 
 my $version;
@@ -106,6 +106,7 @@ scan-prereqs-cpanfile - Scan prerequisite modules and generate CPANfile
         --diff=cpanfile       # Generate diff from cpanfile
         --ignore=extlib
         --dir=/foo/bar
+        --scan-test-requires
 
 =head1 DESCRIPTION
 
@@ -160,7 +161,7 @@ By default, phases without any prereqs are not dumped, By giving this option, cp
 
 Defaults to false.
 
-=item --scan-test-requires (EXPERIMENTAL)
+=item --scan-test-requires
 
 Scan test files and include the modules specified by L<Test::Requires> as 'develop' requires.
 
