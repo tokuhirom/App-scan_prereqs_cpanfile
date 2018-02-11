@@ -14,11 +14,11 @@ use CPAN::Meta ();
 use CPAN::Meta::Requirements ();
 use File::Find qw(find);
 use Module::CoreList ();
-use Module::CPANfile ();
+use Module::CPANfile 0.9020 ();
 use File::Spec ();
 use File::Basename ();
 use Module::Metadata ();
-use Perl::PrereqScanner::Lite;
+use Perl::PrereqScanner::Lite 0.21;
 
 sub debugf {
     if ($ENV{SCAN_PREREQS_CPANFILE_DEBUG}) {

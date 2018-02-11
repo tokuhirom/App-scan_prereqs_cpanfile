@@ -1,8 +1,11 @@
 Revision history for Perl extension App-scan_prereqs_cpanfile
 
 {{$NEXT}}
-    - Make --scan-test-requires the official feature
-    - The pm files under the test directories are also target of --scan-test-requires
+
+    - add option --dir (simonmeggle)
+    - Make --scan-test-requires the official feature (songmu)
+    - The pm files under the test directories are also target of --scan-test-requires (songmu)
+    - update dependency by using scan-prereqs-cpanfile itself (songmu)
 
 1.03 2015-02-26T08:29:19Z
 
