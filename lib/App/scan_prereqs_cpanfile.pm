@@ -6,7 +6,7 @@ our $VERSION = "1.03";
 
 use Exporter 5.57 'import';
 our @EXPORT_OK = qw(
-    debugf find_perl_files scan_inner_packages scan scan_test_requires
+    debugf find_perl_files scan_inner_packages scan scan_test_requires load_diff_src
 );
 
 use version ();

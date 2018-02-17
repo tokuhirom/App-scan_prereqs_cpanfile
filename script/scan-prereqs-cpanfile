@@ -9,7 +9,7 @@ use File::Basename ();
 use Module::CPANfile ();
 
 use App::scan_prereqs_cpanfile qw(
-    debugf find_perl_files scan_inner_packages scan scan_test_requires
+    debugf find_perl_files scan_inner_packages scan scan_test_requires load_diff_src
 );
 
 my $version;
