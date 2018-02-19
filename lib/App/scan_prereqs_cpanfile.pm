@@ -2,7 +2,7 @@ package App::scan_prereqs_cpanfile;
 use strict;
 use warnings;
 use 5.008005;
-our $VERSION = "1.03";
+our $VERSION = "1.10";
 
 use Exporter 5.57 'import';
 our @EXPORT_OK = qw(
