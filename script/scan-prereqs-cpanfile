@@ -78,7 +78,7 @@ if ($version) {
 
     # Get minimum versions from currently installed modules (= available in @INC)
     if ($match_versions) {
-		require Module::Metadata;
+        require Module::Metadata;
         for my $prereqs ($runtime_prereqs, $configure_prereqs, $test_prereqs, $develop_prereqs) {
             $prereqs = {
                 map {
@@ -125,6 +125,7 @@ scan-prereqs-cpanfile - Scan prerequisite modules and generate CPANfile
         --ignore=extlib
         --dir=/foo/bar
         --scan-test-requires
+        --match-versions      # Use versions of currently installed modules
 
 =head1 DESCRIPTION
 
@@ -188,6 +189,10 @@ Scan test files and include the modules specified by L<Test::Requires> as 'devel
     --dir=DIRECTORY
 
 Scan for modules in DIRECTORY (instead of '.') 
+
+=item --match-versions
+
+Scan currently installed modules and use their versions instead of using the latest available versions on CPAN.
 
 =back
 
