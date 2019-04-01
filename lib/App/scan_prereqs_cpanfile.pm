@@ -2,11 +2,11 @@ package App::scan_prereqs_cpanfile;
 use strict;
 use warnings;
 use 5.008005;
-our $VERSION = "1.03";
+our $VERSION = "1.10";
 
 use Exporter 5.57 'import';
 our @EXPORT_OK = qw(
-    debugf find_perl_files scan_inner_packages scan
+    debugf find_perl_files scan_inner_packages scan scan_test_requires load_diff_src
 );
 
 use version ();
@@ -14,14 +14,11 @@ use CPAN::Meta ();
 use CPAN::Meta::Requirements ();
 use File::Find qw(find);
 use Module::CoreList ();
-use Module::CPANfile ();
+use Module::CPANfile 0.9020 ();
 use File::Spec ();
 use File::Basename ();
 use Module::Metadata ();
-use Perl::PrereqScanner::Lite;
-
-
-
+use Perl::PrereqScanner::Lite 0.21;
 
 sub debugf {
     if ($ENV{SCAN_PREREQS_CPANFILE_DEBUG}) {
@@ -34,8 +31,6 @@ sub debugf {
         print $txt, "\n";
     }
 }
-
-
 
 sub scan {
     my ($files, $inner_packages, $meta_prereqs, $prereq_types, $type, $optional_prereqs) = @_;
@@ -221,7 +216,7 @@ sub scan_test_requires {
                 return if -S $_; # Ignore UNIX socket
 
                 my (undef, $topdir, ) = File::Spec->splitdir($_);
-                if (($topdir eq 'xt' || $topdir eq 't') && /\.t$/ ) {
+                if (($topdir eq 'xt' || $topdir eq 't') && /\.(?:t|pm)$/ ) {
                     push @test_files, $_
                 }
             },
