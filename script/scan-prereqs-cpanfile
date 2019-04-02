@@ -21,6 +21,7 @@ my $ignorefile;
 my $ignore_regexp;
 my @ignore = qw(eg examples share fatlib _build .git blib local .build);
 my $add_ignore;
+my $match_versions;
 my $p = Getopt::Long::Parser->new(
     config => [qw(posix_default no_ignore_case auto_help)]
 );
@@ -28,10 +29,11 @@ $p->getoptions(
     'version!'       => \$version,
     'diff=s'         => \$diff,
     'ignore=s'       => \$add_ignore,
-    'ignore-file=s'    => \$ignorefile,
+    'ignore-file=s'  => \$ignorefile,
     'include-empty!' => \$include_empty,
     'scan-test-requires' => \$scan_test_requires,
     'dir=s'          => \$dir,
+    'match-versions' => \$match_versions,
 );
 push @ignore, split /,/,$add_ignore if $add_ignore;
 
@@ -74,6 +76,22 @@ if ($version) {
         $develop_prereqs = scan_test_requires($dir, $develop_prereqs);
     }
 
+    # Get minimum versions from currently installed modules (= available in @INC)
+    if ($match_versions) {
+        require Module::Metadata;
+        for my $prereqs ($runtime_prereqs, $configure_prereqs, $test_prereqs, $develop_prereqs) {
+            $prereqs = {
+                map {
+                    my $meta = Module::Metadata->new_from_module($_);
+                    $_ => m/^perl$/    # Module::Metadata does not work for "perl"
+                        ? $prereqs->{$_}
+                        : ( $meta ? $meta->version : undef )
+                }
+                keys %$prereqs
+            };
+        }
+    }
+
     print Module::CPANfile->from_prereqs(
         {
             runtime => {
@@ -107,6 +125,7 @@ scan-prereqs-cpanfile - Scan prerequisite modules and generate CPANfile
         --ignore=extlib
         --dir=/foo/bar
         --scan-test-requires
+        --match-versions      # Use versions of currently installed modules
 
 =head1 DESCRIPTION
 
@@ -170,6 +189,10 @@ Scan test files and include the modules specified by L<Test::Requires> as 'devel
     --dir=DIRECTORY
 
 Scan for modules in DIRECTORY (instead of '.') 
+
+=item --match-versions
+
+Scan currently installed modules and use their versions instead of using the latest available versions on CPAN.
 
 =back
 
